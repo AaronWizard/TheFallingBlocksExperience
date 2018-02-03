@@ -5,16 +5,6 @@ export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
 const BORDER_TILE_NAME = "grey"
 
-var _BLOCKS = [
-	preload("res://blocks/i.tscn").instance(),
-	preload("res://blocks/j.tscn").instance(),
-	preload("res://blocks/l.tscn").instance(),
-	preload("res://blocks/o.tscn").instance(),
-	preload("res://blocks/s.tscn").instance(),
-	preload("res://blocks/t.tscn").instance(),
-	preload("res://blocks/z.tscn").instance()
-]
-
 var _block_tiles # [{pos:a, type:b}, ...]
 
 var _game_over
@@ -59,8 +49,8 @@ func _on_timer_timeout():
 			_spawn_block()
 
 func _spawn_block():
-	var index = randi() % _BLOCKS.size()
-	var block = _BLOCKS[index]
+	var index = randi() % $blocks.get_child_count()
+	var block = $blocks.get_child(index)
 
 	var board_middle = int(board_size.x / 2)
 	var block_middle = int(block.get_used_rect().size.x / 2)
@@ -73,7 +63,7 @@ func _spawn_block():
 
 	_draw_block()
 	if not _is_block_space_empty():
-		_set_game_over()
+		_end_game()
 
 func _get_translated_tiles(pos):
 	var result = []
@@ -118,7 +108,7 @@ func _is_block_space_empty(pos = Vector2()):
 
 	return result
 
-func _set_game_over():
+func _end_game():
 	_game_over = true
 	$timer.stop()
 	print("game over")

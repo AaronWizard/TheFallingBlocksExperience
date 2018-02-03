@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://tilesets/tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://board.gd" type="Script" id=2]
+[ext_resource path="res://blocks/i.tscn" type="PackedScene" id=3]
+[ext_resource path="res://blocks/j.tscn" type="PackedScene" id=4]
+[ext_resource path="res://blocks/l.tscn" type="PackedScene" id=5]
+[ext_resource path="res://blocks/o.tscn" type="PackedScene" id=6]
+[ext_resource path="res://blocks/s.tscn" type="PackedScene" id=7]
+[ext_resource path="res://blocks/t.tscn" type="PackedScene" id=8]
+[ext_resource path="res://blocks/z.tscn" type="PackedScene" id=9]
 
 [node name="board" type="TileMap" index="0"]
 
@@ -26,7 +33,39 @@ script = ExtResource( 2 )
 _sections_unfolded = [ "Cell" ]
 board_size = Vector2( 10, 20 )
 
-[node name="current_tile" type="TileMap" parent="." index="0"]
+[node name="blocks" type="Node" parent="." index="0"]
+
+editor/display_folded = true
+
+[node name="i" parent="blocks" index="0" instance=ExtResource( 3 )]
+
+visible = false
+
+[node name="j" parent="blocks" index="1" instance=ExtResource( 4 )]
+
+visible = false
+
+[node name="l" parent="blocks" index="2" instance=ExtResource( 5 )]
+
+visible = false
+
+[node name="o" parent="blocks" index="3" instance=ExtResource( 6 )]
+
+visible = false
+
+[node name="s" parent="blocks" index="4" instance=ExtResource( 7 )]
+
+visible = false
+
+[node name="t" parent="blocks" index="5" instance=ExtResource( 8 )]
+
+visible = false
+
+[node name="z" parent="blocks" index="6" instance=ExtResource( 9 )]
+
+visible = false
+
+[node name="current_tile" type="TileMap" parent="." index="1"]
 
 mode = 0
 tile_set = ExtResource( 1 )
@@ -47,10 +86,10 @@ format = 1
 tile_data = PoolIntArray(  )
 _sections_unfolded = [ "Cell" ]
 
-[node name="timer" type="Timer" parent="." index="1"]
+[node name="timer" type="Timer" parent="." index="2"]
 
 process_mode = 1
-wait_time = 0.2
+wait_time = 0.1
 one_shot = false
 autostart = true
 
