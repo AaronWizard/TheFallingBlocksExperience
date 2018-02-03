@@ -89,10 +89,19 @@ _sections_unfolded = [ "Cell" ]
 [node name="timer" type="Timer" parent="." index="2"]
 
 process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = true
+
+[node name="input timer" type="Timer" parent="." index="3"]
+
+process_mode = 1
 wait_time = 0.1
 one_shot = false
 autostart = true
 
 [connection signal="timeout" from="timer" to="." method="_on_timer_timeout"]
+
+[connection signal="timeout" from="input timer" to="." method="_on_input_timer_timeout"]
 
 
