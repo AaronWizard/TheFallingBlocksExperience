@@ -20,7 +20,7 @@ collision_layer = 1
 collision_mask = 1
 occluder_light_mask = 1
 format = 1
-tile_data = PoolIntArray( 0, 6, 0, 65536, 6, 0, 131072, 6, 0, 196608, 6, 0 )
+tile_data = PoolIntArray( 0, 6, 0, 1, 6, 0, 2, 6, 0, 3, 6, 0 )
 _sections_unfolded = [ "Cell" ]
 
 
