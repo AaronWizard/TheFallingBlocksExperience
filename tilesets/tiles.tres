@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=8 format=2]
+[gd_resource type="TileSet" load_steps=9 format=2]
 
 [ext_resource path="res://graphics/red.png" type="Texture" id=1]
 [ext_resource path="res://graphics/orange.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://graphics/cyan.png" type="Texture" id=5]
 [ext_resource path="res://graphics/blue.png" type="Texture" id=6]
 [ext_resource path="res://graphics/violet.png" type="Texture" id=7]
+[ext_resource path="res://graphics/grey.png" type="Texture" id=8]
 
 [resource]
 
@@ -73,4 +74,13 @@
 6/occluder_offset = Vector2( 8, 8 )
 6/navigation_offset = Vector2( 8, 8 )
 6/shapes = [  ]
+7/name = "grey"
+7/texture = ExtResource( 8 )
+7/tex_offset = Vector2( 0, 0 )
+7/modulate = Color( 1, 1, 1, 1 )
+7/region = Rect2( 0, 0, 16, 16 )
+7/is_autotile = false
+7/occluder_offset = Vector2( 8, 8 )
+7/navigation_offset = Vector2( 8, 8 )
+7/shapes = [  ]
 
