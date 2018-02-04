@@ -6,6 +6,7 @@
 [node name="z" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
+block_position = Vector2( 0, 0 )
 block_rotation = 0
 
 [node name="TileMap" type="TileMap" parent="." index="0"]
