@@ -7,13 +7,13 @@ const BORDER_TILE_NAME = "grey"
 const INPUT_TIME = 1.0 / 60.0
 
 var _block_types = [
-	preload("res://blocks/i.tscn")#,
-	#preload("res://blocks/j.tscn"),
-	#preload("res://blocks/l.tscn"),
-	#preload("res://blocks/o.tscn"),
-	#reload("res://blocks/s.tscn"),
-	#preload("res://blocks/t.tscn"),
-	#preload("res://blocks/z.tscn")
+	preload("res://blocks/i.tscn"),
+	preload("res://blocks/j.tscn"),
+	preload("res://blocks/l.tscn"),
+	preload("res://blocks/o.tscn"),
+	preload("res://blocks/s.tscn"),
+	preload("res://blocks/t.tscn"),
+	preload("res://blocks/z.tscn")
 ]
 
 var _block
