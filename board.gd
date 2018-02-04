@@ -3,7 +3,9 @@ extends Node2D
 
 export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
-export(float) var max_block_time = 1
+export(float) var start_block_time = 1
+export(float) var block_accel = 0.1
+export(float) var lines_per_level = 5
 
 export(float) var move_time = 0.05
 export(float) var rotate_time = 0.15
@@ -23,7 +25,11 @@ var _block_types = [
 
 var _block
 
+var _max_block_time
 var _block_time
+
+var _lines_left
+
 var _move_time
 var _rotate_time
 
@@ -31,7 +37,11 @@ var _game_over
 
 func _ready():
 	_block = null
-	_block_time = max_block_time
+
+	_max_block_time = start_block_time
+	_lines_left = lines_per_level
+
+	_block_time = start_block_time
 
 	_move_time = move_time
 	_rotate_time = rotate_time
@@ -63,14 +73,14 @@ func _set_size(value):
 			$board_tiles.set_cell(board_size.x + 1, y, border_tile)
 
 func _process(delta):
-	if not _game_over:
+	if not Engine.editor_hint and not _game_over:
 		_block_time -= delta
 		if _block_time <= 0:
 			if _block:
 				_drop_block()
 			else:
 				_spawn_block()
-			_block_time += max_block_time
+			_block_time += _max_block_time
 
 		if _block:
 			_move_time -= delta
@@ -131,7 +141,7 @@ func _drop_block():
 		_end_block()
 
 func _drop_block_fast():
-	while _block != null:
+	while _block:
 		_drop_block()
 
 func _move_block(pos, rot):
@@ -159,7 +169,8 @@ func _end_block():
 	_block.queue_free()
 	_block = null
 
-	_check_for_completed_lines()
+	if not _game_over:
+		_check_for_completed_lines()
 
 func _check_for_completed_lines():
 	var rows = []
@@ -171,6 +182,12 @@ func _check_for_completed_lines():
 				break
 		if complete:
 			rows.append(y)
+
+	_lines_left -= rows.size()
+	while _lines_left <= 0:
+		_lines_left += lines_per_level
+		_max_block_time -= block_accel
+		_max_block_time = max(_max_block_time, max(move_time, rotate_time))
 
 	while not rows.empty():
 		var current_y = rows.front()
@@ -189,4 +206,5 @@ func _check_for_completed_lines():
 
 func _end_game():
 	_game_over = true
+	_end_block()
 	print("game over")

@@ -11,9 +11,11 @@ __meta__ = {
 "_edit_group_": true
 }
 board_size = Vector2( 10, 20 )
-max_block_time = 1
+start_block_time = 1
+block_accel = 0.1
+lines_per_level = 5
 move_time = 0.05
-rotate_time = 0.1
+rotate_time = 0.15
 
 [node name="board_tiles" type="TileMap" parent="." index="0"]
 
