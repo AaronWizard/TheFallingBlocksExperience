@@ -1,6 +1,8 @@
 tool
 extends Node2D
 
+signal game_over
+
 export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
 export(float) var start_block_time = 1
@@ -35,26 +37,10 @@ var _lines_left
 var _move_time
 var _rotate_time
 
-var _game_over
+var _running
 
 func _ready():
-	_block = null
-
-	_max_block_time = start_block_time
-	_lines_left = lines_per_level
-
-	_block_time = start_block_time
-	_just_spawned = false
-	_grace = false
-
-	_move_time = move_time
-	_rotate_time = rotate_time
-
-	_game_over = false
-
-	if not Engine.editor_hint:
-		randomize()
-		_spawn_block()
+	_running = false
 
 func _set_size(value):
 	board_size = value
@@ -76,8 +62,32 @@ func _set_size(value):
 			$board_tiles.set_cell(0, y, border_tile)
 			$board_tiles.set_cell(board_size.x + 1, y, border_tile)
 
+func start_game():
+	randomize()
+
+	_running = true
+
+	_block = null
+
+	_max_block_time = start_block_time
+	_lines_left = lines_per_level
+
+	_block_time = start_block_time
+	_just_spawned = false
+	_grace = false
+
+	_move_time = move_time
+	_rotate_time = rotate_time
+
+	_spawn_block()
+
+func _input(event):
+	if _running and event.is_action_pressed("cancel"):
+		get_tree().set_input_as_handled()
+		_end_game()
+
 func _process(delta):
-	if not Engine.editor_hint and not _game_over:
+	if not Engine.editor_hint and _running:
 		_block_time -= delta
 		if _block_time <= 0:
 			if _block:
@@ -149,6 +159,7 @@ func _drop_block():
 			_grace = false
 		else:
 			_grace = true
+			_block_time -= _max_block_time / 2.0
 
 	_just_spawned = false
 
@@ -181,7 +192,7 @@ func _end_block():
 	_block.queue_free()
 	_block = null
 
-	if not _game_over:
+	if _running:
 		_check_for_completed_lines()
 
 func _check_for_completed_lines():
@@ -217,6 +228,11 @@ func _check_for_completed_lines():
 					$board_tiles.set_cell(x, y, -1)
 
 func _end_game():
-	_game_over = true
+	_running = false
 	_end_block()
-	print("game over")
+
+	for x in range(1, board_size.x + 1):
+		for y in range(1, board_size.y + 1):
+			$board_tiles.set_cell(x, y, -1)
+
+	emit_signal("game_over")
