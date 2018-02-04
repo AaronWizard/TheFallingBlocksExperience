@@ -7,6 +7,9 @@
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Cell" ]
+__meta__ = {
+"_edit_group_": true
+}
 board_size = Vector2( 10, 20 )
 
 [node name="board_tiles" type="TileMap" parent="." index="0"]

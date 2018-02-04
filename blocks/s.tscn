@@ -6,6 +6,9 @@
 [node name="s" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 block_position = Vector2( 0, 0 )
 block_rotation = 0
 
