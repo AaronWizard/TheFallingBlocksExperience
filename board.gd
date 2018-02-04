@@ -1,5 +1,5 @@
 tool
-extends TileMap
+extends Node2D
 
 export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
@@ -7,13 +7,13 @@ const BORDER_TILE_NAME = "grey"
 const INPUT_TIME = 1.0 / 60.0
 
 var _block_types = [
-	preload("res://blocks/i.tscn"),
-	preload("res://blocks/j.tscn"),
-	preload("res://blocks/l.tscn"),
-	preload("res://blocks/o.tscn"),
-	preload("res://blocks/s.tscn"),
-	preload("res://blocks/t.tscn"),
-	preload("res://blocks/z.tscn")
+	preload("res://blocks/i.tscn")#,
+	#preload("res://blocks/j.tscn"),
+	#preload("res://blocks/l.tscn"),
+	#preload("res://blocks/o.tscn"),
+	#reload("res://blocks/s.tscn"),
+	#preload("res://blocks/t.tscn"),
+	#preload("res://blocks/z.tscn")
 ]
 
 var _block
@@ -30,20 +30,22 @@ func _ready():
 func _set_size(value):
 	board_size = value
 
-	clear()
+	if get_child_count() > 0:
+		$board_tiles.clear()
 
-	var border_tile = tile_set.find_tile_by_name(BORDER_TILE_NAME)
-	assert(border_tile != null)
+		var border_tile = $board_tiles.tile_set.find_tile_by_name(
+				BORDER_TILE_NAME)
+		assert(border_tile != null)
 
-	# Top and bottom
-	for x in range(board_size.x + 2):
-		set_cell(x, 0, border_tile)
-		set_cell(x, board_size.y + 1, border_tile)
+		# Top and bottom
+		for x in range(board_size.x + 2):
+			$board_tiles.set_cell(x, 0, border_tile)
+			$board_tiles.set_cell(x, board_size.y + 1, border_tile)
 
-	# Left and right
-	for y in range(1, board_size.y + 1):
-		set_cell(0, y, border_tile)
-		set_cell(board_size.x + 1, y, border_tile)
+		# Left and right
+		for y in range(1, board_size.y + 1):
+			$board_tiles.set_cell(0, y, border_tile)
+			$board_tiles.set_cell(board_size.x + 1, y, border_tile)
 
 func _on_timer_timeout():
 	if not _game_over:
@@ -106,7 +108,7 @@ func _move_block(pos, rot):
 func _is_block_space_empty(pos, rot):
 	var result = true
 	for t in _block.get_tiles(pos, rot):
-		if get_cellv(t) != -1:
+		if $board_tiles.get_cellv(t) != -1:
 			result = false
 			break
 	return result
@@ -114,10 +116,39 @@ func _is_block_space_empty(pos, rot):
 func _end_block():
 	var tiles = _block.get_tiles()
 	for t in tiles:
-		set_cellv(t + _block.block_position, _block.get_tile_type(t))
+		$board_tiles.set_cellv(t + _block.block_position,
+				_block.get_tile_type(t))
 
 	_block.queue_free()
 	_block = null
+
+	_check_for_completed_lines()
+
+func _check_for_completed_lines():
+	var rows = []
+	for y in range(board_size.y, 0, -1):
+		var complete = true
+		for x in range(1, board_size.x + 1):
+			if $board_tiles.get_cell(x, y) == -1:
+				complete = false
+				break
+		if complete:
+			rows.append(y)
+
+	while not rows.empty():
+		var current_y = rows.front()
+
+		rows.pop_front()
+		for i in range(rows.size()):
+			rows[i] -= 1
+
+		for x in range(1, board_size.x + 1):
+			for y in range(current_y, 0, -1):
+				if y - 1 > 0:
+					var tile_above = $board_tiles.get_cell(x, y - 1)
+					$board_tiles.set_cell(x, y, tile_above)
+				else:
+					$board_tiles.set_cell(x, y, -1)
 
 func _end_game():
 	_game_over = true
