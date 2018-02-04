@@ -1,6 +1,7 @@
 tool
 extends Node2D
 
+signal pause
 signal game_over
 
 export(Vector2) var board_size = Vector2(10, 20) setget _set_size
@@ -84,7 +85,7 @@ func start_game():
 func _input(event):
 	if _running and event.is_action_pressed("cancel"):
 		get_tree().set_input_as_handled()
-		_end_game()
+		emit_signal("pause")
 
 func _process(delta):
 	if not Engine.editor_hint and _running:
@@ -144,7 +145,7 @@ func _spawn_block():
 	_block.block_position = block_pos
 
 	if not _is_block_space_empty(block_pos, 0):
-		_end_game()
+		end_game()
 	else:
 		_just_spawned = true
 
@@ -227,7 +228,7 @@ func _check_for_completed_lines():
 				else:
 					$board_tiles.set_cell(x, y, -1)
 
-func _end_game():
+func end_game():
 	_running = false
 	_end_block()
 
