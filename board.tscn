@@ -43,7 +43,7 @@ autostart = true
 [node name="input timer" type="Timer" parent="." index="2"]
 
 process_mode = 1
-wait_time = 0.1
+wait_time = 0.05
 one_shot = false
 autostart = true
 

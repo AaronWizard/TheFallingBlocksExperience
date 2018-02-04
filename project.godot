@@ -11,7 +11,15 @@ config_version=3
 [application]
 
 config/name="The Falling Blocks Experience"
+run/main_scene="res://board.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=192
+window/size/height=352
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [input]
 
