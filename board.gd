@@ -10,8 +10,8 @@ export(float) var start_block_time = 1
 export(float) var block_accel = 0.1
 export(float) var lines_per_level = 5
 
-export(float) var move_time = 0.05
-export(float) var rotate_time = 0.15
+export(float) var move_time = 0.2
+#export(float) var rotate_time = 0.25
 
 const BORDER_TILE_NAME = "grey"
 const INPUT_TIME = 1.0 / 60.0
@@ -30,13 +30,12 @@ var _block
 
 var _max_block_time
 var _block_time
-var _just_spawned
 var _grace
 
 var _lines_left
 
 var _move_time
-var _rotate_time
+#var _rotate_time
 
 var _running
 
@@ -74,18 +73,29 @@ func start_game():
 	_lines_left = lines_per_level
 
 	_block_time = start_block_time
-	_just_spawned = false
 	_grace = false
 
 	_move_time = move_time
-	_rotate_time = rotate_time
+#	_rotate_time = rotate_time
 
 	_spawn_block()
 
 func _input(event):
-	if _running and event.is_action_pressed("cancel"):
-		get_tree().set_input_as_handled()
-		emit_signal("pause")
+	if not Engine.editor_hint and _running:
+		if event.is_action_pressed("cancel"):
+			get_tree().set_input_as_handled()
+			emit_signal("pause")
+		elif _block:
+			if event.is_action_pressed("drop"):
+				_drop_block_fast()
+			else:
+				_control_block(
+						event.is_action_pressed("move_left"),
+						event.is_action_pressed("move_right"),
+						event.is_action_pressed("move_down"),
+						event.is_action_pressed("rotate_ccw"),
+						event.is_action_pressed("rotate_cw")
+						)
 
 func _process(delta):
 	if not Engine.editor_hint and _running:
@@ -99,37 +109,42 @@ func _process(delta):
 
 		if _block:
 			_move_time -= delta
-			_rotate_time -= delta
+			#_rotate_time -= delta
 
-			_control_block(_move_time <= 0, _rotate_time <= 0)
+			var can_move = _move_time <= 0
+			#var can_rotate = _rotate_time <= 0
 
-			if _move_time <= 0:
+			var move_left = Input.is_action_pressed("move_left") and can_move
+			var move_right = Input.is_action_pressed("move_right") and can_move
+			var move_down = Input.is_action_pressed("move_down") and can_move
+			#var rotate_ccw = Input.is_action_pressed("rotate_ccw") \
+					#and can_rotate
+			#var rotate_cw = Input.is_action_pressed("rotate_cw") and can_rotate
+
+			_control_block(move_left, move_right, move_down, false, false)#rotate_ccw, rotate_cw)
+
+			if can_move:
 				_move_time += move_time
-			if _rotate_time <= 0:
-				_rotate_time += rotate_time
+			#if can_rotate:
+			#	_rotate_time += rotate_time
 
-func _control_block(can_move, can_rotate):
-	if can_move and Input.is_action_pressed("drop") and not _just_spawned:
-		_drop_block_fast()
-	elif can_move or can_rotate:
-		var move = Vector2()
-		var rotate = 0
+func _control_block(move_left, move_right, move_down, rotate_ccw, rotate_cw):
+	var move = Vector2()
+	var rotate = 0
 
-		if can_move:
-			if Input.is_action_pressed("move_left"):
-				move.x -= 1
-			if Input.is_action_pressed("move_right"):
-				move.x += 1
-			if Input.is_action_pressed("move_down"):
-				move.y += 1
+	if move_left:
+		move.x -= 1
+	if move_right:
+		move.x += 1
+	if move_down:
+		move.y += 1
 
-		if can_rotate:
-			if Input.is_action_pressed("rotate_ccw"):
-				rotate -= 1
-			if Input.is_action_pressed("rotate_cw"):
-				rotate += 1
+	if rotate_ccw:
+		rotate -= 1
+	if rotate_cw:
+		rotate += 1
 
-		_move_block(move, rotate)
+	_move_block(move, rotate)
 
 func _spawn_block():
 	var index = randi() % _block_types.size()
@@ -146,8 +161,6 @@ func _spawn_block():
 
 	if not _is_block_space_empty(block_pos, 0):
 		end_game()
-	else:
-		_just_spawned = true
 
 func _drop_block():
 	if not Input.is_action_pressed("move_down"):
@@ -161,8 +174,6 @@ func _drop_block():
 		else:
 			_grace = true
 			_block_time -= _max_block_time / 2.0
-
-	_just_spawned = false
 
 func _drop_block_fast():
 	while _block:
@@ -211,7 +222,7 @@ func _check_for_completed_lines():
 	while _lines_left <= 0:
 		_lines_left += lines_per_level
 		_max_block_time -= block_accel
-		_max_block_time = max(_max_block_time, max(move_time, rotate_time))
+		_max_block_time = max(_max_block_time, move_time)#max(move_time, rotate_time))
 
 	while not rows.empty():
 		var current_y = rows.front()
