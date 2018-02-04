@@ -123,6 +123,7 @@ func _end_block():
 	_block = null
 
 	_check_for_completed_lines()
+	$timer.start()
 
 func _check_for_completed_lines():
 	var rows = []
@@ -140,7 +141,7 @@ func _check_for_completed_lines():
 
 		rows.pop_front()
 		for i in range(rows.size()):
-			rows[i] -= 1
+			rows[i] += 1
 
 		for x in range(1, board_size.x + 1):
 			for y in range(current_y, 0, -1):
