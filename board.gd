@@ -3,6 +3,11 @@ extends Node2D
 
 export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
+export(float) var max_block_time = 1
+
+export(float) var move_time = 0.05
+export(float) var rotate_time = 0.15
+
 const BORDER_TILE_NAME = "grey"
 const INPUT_TIME = 1.0 / 60.0
 
@@ -17,10 +22,20 @@ var _block_types = [
 ]
 
 var _block
+
+var _block_time
+var _move_time
+var _rotate_time
+
 var _game_over
 
 func _ready():
 	_block = null
+	_block_time = max_block_time
+
+	_move_time = move_time
+	_rotate_time = rotate_time
+
 	_game_over = false
 
 	if not Engine.editor_hint:
@@ -47,21 +62,35 @@ func _set_size(value):
 			$board_tiles.set_cell(0, y, border_tile)
 			$board_tiles.set_cell(board_size.x + 1, y, border_tile)
 
-func _on_timer_timeout():
+func _process(delta):
 	if not _game_over:
-		if _block != null:
-			_drop_block()
-		else:
-			_spawn_block()
+		_block_time -= delta
+		if _block_time <= 0:
+			if _block:
+				_drop_block()
+			else:
+				_spawn_block()
+			_block_time += max_block_time
 
-func _on_input_timer_timeout():
-	if _block != null:
-		if Input.is_action_pressed("drop"):
-			_drop_block_fast()
-		else:
-			var move = Vector2()
-			var rotate = 0
+		if _block:
+			_move_time -= delta
+			_rotate_time -= delta
 
+			_control_block(_move_time <= 0, _rotate_time <= 0)
+
+			if _move_time <= 0:
+				_move_time += move_time
+			if _rotate_time <= 0:
+				_rotate_time += rotate_time
+
+func _control_block(can_move, can_rotate):
+	if can_move and Input.is_action_pressed("drop"):
+		_drop_block_fast()
+	elif can_move or can_rotate:
+		var move = Vector2()
+		var rotate = 0
+
+		if can_move:
 			if Input.is_action_pressed("move_left"):
 				move.x -= 1
 			if Input.is_action_pressed("move_right"):
@@ -69,12 +98,13 @@ func _on_input_timer_timeout():
 			if Input.is_action_pressed("move_down"):
 				move.y += 1
 
+		if can_rotate:
 			if Input.is_action_pressed("rotate_ccw"):
 				rotate -= 1
 			if Input.is_action_pressed("rotate_cw"):
 				rotate += 1
 
-			_move_block(move, rotate)
+		_move_block(move, rotate)
 
 func _spawn_block():
 	var index = randi() % _block_types.size()
@@ -130,7 +160,6 @@ func _end_block():
 	_block = null
 
 	_check_for_completed_lines()
-	$timer.start()
 
 func _check_for_completed_lines():
 	var rows = []
@@ -160,5 +189,4 @@ func _check_for_completed_lines():
 
 func _end_game():
 	_game_over = true
-	$timer.stop()
 	print("game over")
