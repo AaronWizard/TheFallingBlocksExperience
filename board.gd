@@ -27,6 +27,8 @@ var _block
 
 var _max_block_time
 var _block_time
+var _just_spawned
+var _grace
 
 var _lines_left
 
@@ -42,6 +44,8 @@ func _ready():
 	_lines_left = lines_per_level
 
 	_block_time = start_block_time
+	_just_spawned = false
+	_grace = false
 
 	_move_time = move_time
 	_rotate_time = rotate_time
@@ -94,7 +98,7 @@ func _process(delta):
 				_rotate_time += rotate_time
 
 func _control_block(can_move, can_rotate):
-	if can_move and Input.is_action_pressed("drop"):
+	if can_move and Input.is_action_pressed("drop") and not _just_spawned:
 		_drop_block_fast()
 	elif can_move or can_rotate:
 		var move = Vector2()
@@ -131,6 +135,8 @@ func _spawn_block():
 
 	if not _is_block_space_empty(block_pos, 0):
 		_end_game()
+	else:
+		_just_spawned = true
 
 func _drop_block():
 	if not Input.is_action_pressed("move_down"):
@@ -138,7 +144,13 @@ func _drop_block():
 
 	if not _is_block_space_empty(_block.block_position + Vector2(0, 1),
 			_block.block_rotation):
-		_end_block()
+		if _grace:
+			_end_block()
+			_grace = false
+		else:
+			_grace = true
+
+	_just_spawned = false
 
 func _drop_block_fast():
 	while _block:
