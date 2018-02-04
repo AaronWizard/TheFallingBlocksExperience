@@ -56,22 +56,25 @@ func _on_timer_timeout():
 
 func _on_input_timer_timeout():
 	if _block != null:
-		var move = Vector2()
-		var rotate = 0
+		if Input.is_action_pressed("drop"):
+			_drop_block_fast()
+		else:
+			var move = Vector2()
+			var rotate = 0
 
-		if Input.is_action_pressed("move_left"):
-			move.x -= 1
-		if Input.is_action_pressed("move_right"):
-			move.x += 1
-		if Input.is_action_pressed("move_down"):
-			move.y += 1
+			if Input.is_action_pressed("move_left"):
+				move.x -= 1
+			if Input.is_action_pressed("move_right"):
+				move.x += 1
+			if Input.is_action_pressed("move_down"):
+				move.y += 1
 
-		if Input.is_action_pressed("rotate_ccw"):
-			rotate -= 1
-		if Input.is_action_pressed("rotate_cw"):
-			rotate += 1
+			if Input.is_action_pressed("rotate_ccw"):
+				rotate -= 1
+			if Input.is_action_pressed("rotate_cw"):
+				rotate += 1
 
-		_move_block(move, rotate)
+			_move_block(move, rotate)
 
 func _spawn_block():
 	var index = randi() % _block_types.size()
@@ -96,6 +99,10 @@ func _drop_block():
 	if not _is_block_space_empty(_block.block_position + Vector2(0, 1),
 			_block.block_rotation):
 		_end_block()
+
+func _drop_block_fast():
+	while _block != null:
+		_drop_block()
 
 func _move_block(pos, rot):
 	var new_pos = _block.block_position + pos
