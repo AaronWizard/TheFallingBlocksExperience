@@ -13,7 +13,7 @@ __meta__ = {
 board_size = Vector2( 10, 20 )
 start_block_time = 1
 block_accel = 0.1
-lines_per_level = 5
+lines_per_level = 10
 move_time = 0.2
 
 [node name="board_tiles" type="TileMap" parent="." index="0"]

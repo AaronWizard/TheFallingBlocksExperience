@@ -8,10 +8,9 @@ export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
 export(float) var start_block_time = 1
 export(float) var block_accel = 0.1
-export(float) var lines_per_level = 5
+export(float) var lines_per_level = 10
 
 export(float) var move_time = 0.2
-#export(float) var rotate_time = 0.25
 
 const BORDER_TILE_NAME = "grey"
 const INPUT_TIME = 1.0 / 60.0
@@ -35,7 +34,6 @@ var _grace
 var _lines_left
 
 var _move_time
-#var _rotate_time
 
 var _running
 
@@ -76,7 +74,6 @@ func start_game():
 	_grace = false
 
 	_move_time = move_time
-#	_rotate_time = rotate_time
 
 	_spawn_block()
 
@@ -89,13 +86,20 @@ func _input(event):
 			if event.is_action_pressed("drop"):
 				_drop_block_fast()
 			else:
+				var move_left = event.is_action_pressed("move_left")
+				var move_right = event.is_action_pressed("move_right")
+				var move_down = event.is_action_pressed("move_down")
+
 				_control_block(
-						event.is_action_pressed("move_left"),
-						event.is_action_pressed("move_right"),
-						event.is_action_pressed("move_down"),
+						move_left,
+						move_right,
+						move_down,
 						event.is_action_pressed("rotate_ccw"),
 						event.is_action_pressed("rotate_cw")
 						)
+
+				if move_left or move_right or move_down:
+					_move_time += move_time
 
 func _process(delta):
 	if not Engine.editor_hint and _running:
@@ -109,24 +113,17 @@ func _process(delta):
 
 		if _block:
 			_move_time -= delta
-			#_rotate_time -= delta
 
 			var can_move = _move_time <= 0
-			#var can_rotate = _rotate_time <= 0
 
 			var move_left = Input.is_action_pressed("move_left") and can_move
 			var move_right = Input.is_action_pressed("move_right") and can_move
 			var move_down = Input.is_action_pressed("move_down") and can_move
-			#var rotate_ccw = Input.is_action_pressed("rotate_ccw") \
-					#and can_rotate
-			#var rotate_cw = Input.is_action_pressed("rotate_cw") and can_rotate
 
-			_control_block(move_left, move_right, move_down, false, false)#rotate_ccw, rotate_cw)
+			_control_block(move_left, move_right, move_down, false, false)
 
 			if can_move:
 				_move_time += move_time
-			#if can_rotate:
-			#	_rotate_time += rotate_time
 
 func _control_block(move_left, move_right, move_down, rotate_ccw, rotate_cw):
 	var move = Vector2()
@@ -222,7 +219,7 @@ func _check_for_completed_lines():
 	while _lines_left <= 0:
 		_lines_left += lines_per_level
 		_max_block_time -= block_accel
-		_max_block_time = max(_max_block_time, move_time)#max(move_time, rotate_time))
+		_max_block_time = max(_max_block_time, move_time)
 
 	while not rows.empty():
 		var current_y = rows.front()
