@@ -13,7 +13,8 @@ export(float) var lines_per_level = 10
 export(float) var move_time = 0.2
 
 const BORDER_TILE_NAME = "grey"
-const INPUT_TIME = 1.0 / 60.0
+
+const _BLOCKS_PER_QUEUE = 7
 
 var _block_types = [
 	preload("res://blocks/i.tscn"),
@@ -24,6 +25,8 @@ var _block_types = [
 	preload("res://blocks/t.tscn"),
 	preload("res://blocks/z.tscn")
 ]
+
+var _block_queue
 
 var _block
 
@@ -64,6 +67,9 @@ func start_game():
 	randomize()
 
 	_running = true
+
+	_block_queue = []
+	_generate_block_queue()
 
 	_block = null
 
@@ -118,7 +124,10 @@ func _process(delta):
 
 			var move_left = Input.is_action_pressed("move_left") and can_move
 			var move_right = Input.is_action_pressed("move_right") and can_move
-			var move_down = Input.is_action_pressed("move_down") and can_move
+			# Don't drop block manually if it's already falling fast enough
+			# naturally.
+			var move_down = Input.is_action_pressed("move_down") and can_move \
+					and (_max_block_time > move_time)
 
 			_control_block(move_left, move_right, move_down, false, false)
 
@@ -144,8 +153,12 @@ func _control_block(move_left, move_right, move_down, rotate_ccw, rotate_cw):
 	_move_block(move, rotate)
 
 func _spawn_block():
-	var index = randi() % _block_types.size()
-	_block = _block_types[index].instance()
+	if _block_queue.empty():
+		_generate_block_queue()
+
+	var index = randi() % _block_queue.size()
+	_block = _block_queue[index].instance()
+	_block_queue.remove(index)
 	add_child(_block)
 
 	var block_rect = _block.get_rect()
@@ -159,9 +172,13 @@ func _spawn_block():
 	if not _is_block_space_empty(block_pos, 0):
 		end_game()
 
+func _generate_block_queue():
+	for b in _block_types:
+		for i in range(_BLOCKS_PER_QUEUE):
+			_block_queue.append(b)
+
 func _drop_block():
-	if not Input.is_action_pressed("move_down"):
-		_move_block(Vector2(0, 1), 0)
+	_move_block(Vector2(0, 1), 0)
 
 	if not _is_block_space_empty(_block.block_position + Vector2(0, 1),
 			_block.block_rotation):
