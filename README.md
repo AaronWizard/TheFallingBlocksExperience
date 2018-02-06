@@ -5,6 +5,16 @@ AaronWizard
 
 A game about falling blocks.
 
+## Default Keys
+
+| Move Left                | Left Arrow  |
+| Move Right               | Right Arrow |
+| Move Down                | Down Arrow  |
+| Drop                     | Space       |
+| Rotate Counter Clockwise | z           |
+| Rotate Clockwise         | x           |
+| Pause/Quit               | Escape      |
+
 ## Tools and resources
 
 Made using the Godot game engine.
