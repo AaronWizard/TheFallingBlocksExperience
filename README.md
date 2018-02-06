@@ -8,15 +8,15 @@ A game about falling blocks.
 
 ## Default Keys
 
-| Action | Default Key |
-|---|---|
-| Move Left | Left Arrow |
-| Move Right | Right Arrow |
-| Move Down | Down Arrow |
-| Drop | Space |
-| Rotate Counter Clockwise | z |
-| Rotate Clockwise | x |
-| Pause/Quit | Escape |
+| Action                   | Default Key |
+|--------------------------|-------------|
+| Move Left                | Left Arrow  |
+| Move Right               | Right Arrow |
+| Move Down                | Down Arrow  |
+| Drop                     | Space       |
+| Rotate Counter Clockwise | z           |
+| Rotate Clockwise         | x           |
+| Pause/Quit               | Escape      |
 
 ## Tools and resources
 
