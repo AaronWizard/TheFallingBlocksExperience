@@ -189,6 +189,7 @@ func _drop_block():
 		if _grace:
 			_end_block()
 			_grace = false
+			_block_time = 0
 		else:
 			_grace = true
 			_block_time -= _max_block_time / 2.0
