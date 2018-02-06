@@ -6,15 +6,14 @@ signal game_over
 
 export(Vector2) var board_size = Vector2(10, 20) setget _set_size
 
-export(float) var start_block_time = 1
-export(float) var block_accel = 0.1
-export(float) var lines_per_level = 10
+const START_BLOCK_TIME = 1
+const BLOCK_ACCEL = 0.1
+const LINES_PER_LEVEL = 10
 
-export(float) var move_time = 0.2
+const MOVE_TIME = 0.2
 
 const BORDER_TILE_NAME = "grey"
-
-const _BLOCKS_PER_QUEUE = 7
+const BLOCKS_PER_QUEUE = 7
 
 var _block_types = [
 	preload("res://blocks/i.tscn"),
@@ -73,13 +72,13 @@ func start_game():
 
 	_block = null
 
-	_max_block_time = start_block_time
-	_lines_left = lines_per_level
+	_max_block_time = START_BLOCK_TIME
+	_lines_left = LINES_PER_LEVEL
 
-	_block_time = start_block_time
+	_block_time = START_BLOCK_TIME
 	_grace = false
 
-	_move_time = move_time
+	_move_time = MOVE_TIME
 
 	_spawn_block()
 
@@ -105,7 +104,7 @@ func _input(event):
 						)
 
 				if move_left or move_right or move_down:
-					_move_time += move_time
+					_move_time += MOVE_TIME
 
 func _process(delta):
 	if not Engine.editor_hint and _running:
@@ -127,12 +126,12 @@ func _process(delta):
 			# Don't drop block manually if it's already falling fast enough
 			# naturally.
 			var move_down = Input.is_action_pressed("move_down") and can_move \
-					and (_max_block_time > move_time)
+					and (_max_block_time > MOVE_TIME)
 
 			_control_block(move_left, move_right, move_down, false, false)
 
 			if can_move:
-				_move_time += move_time
+				_move_time += MOVE_TIME
 
 func _control_block(move_left, move_right, move_down, rotate_ccw, rotate_cw):
 	var move = Vector2()
@@ -174,7 +173,7 @@ func _spawn_block():
 
 func _generate_block_queue():
 	for b in _block_types:
-		for i in range(_BLOCKS_PER_QUEUE):
+		for i in range(BLOCKS_PER_QUEUE):
 			_block_queue.append(b)
 
 func _drop_block():
@@ -234,9 +233,9 @@ func _check_for_completed_lines():
 
 	_lines_left -= rows.size()
 	while _lines_left <= 0:
-		_lines_left += lines_per_level
-		_max_block_time -= block_accel
-		_max_block_time = max(_max_block_time, move_time)
+		_lines_left += LINES_PER_LEVEL
+		_max_block_time -= BLOCK_ACCEL
+		_max_block_time = max(_max_block_time, MOVE_TIME)
 
 	while not rows.empty():
 		var current_y = rows.front()

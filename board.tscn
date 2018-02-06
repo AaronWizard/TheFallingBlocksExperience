@@ -3,7 +3,7 @@
 [ext_resource path="res://board.gd" type="Script" id=1]
 [ext_resource path="res://tilesets/tiles.tres" type="TileSet" id=2]
 
-[node name="board" type="Node2D" index="0"]
+[node name="board" type="Node2D"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Cell" ]
@@ -11,10 +11,6 @@ __meta__ = {
 "_edit_group_": true
 }
 board_size = Vector2( 10, 20 )
-start_block_time = 1
-block_accel = 0.1
-lines_per_level = 10
-move_time = 0.2
 
 [node name="board_tiles" type="TileMap" parent="." index="0"]
 
