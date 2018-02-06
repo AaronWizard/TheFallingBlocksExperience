@@ -105,13 +105,18 @@ func _input(event):
 
 				if move_left or move_right or move_down:
 					_move_time += MOVE_TIME
+				if move_down:
+					_block_time += _max_block_time
 
 func _process(delta):
 	if not Engine.editor_hint and _running:
+		var block_dropped = false
+
 		_block_time -= delta
 		if _block_time <= 0:
 			if _block:
 				_drop_block()
+				block_dropped = true
 			else:
 				_spawn_block()
 			_block_time += _max_block_time
@@ -126,7 +131,7 @@ func _process(delta):
 			# Don't drop block manually if it's already falling fast enough
 			# naturally.
 			var move_down = Input.is_action_pressed("move_down") and can_move \
-					and (_max_block_time > MOVE_TIME)
+					and (_max_block_time > MOVE_TIME) and not block_dropped
 
 			_control_block(move_left, move_right, move_down, false, false)
 
