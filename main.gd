@@ -4,32 +4,48 @@ const CONFIG_FILE = "user://config.cfg"
 
 const CONFIG_WINDOW = "window"
 const CONFIG_WINDOW_SIZE = "size"
+const CONFIG_WINDOW_POS = "position"
 
 func _ready():
 	$pause.visible = false
 	_load_screen_config()
-	get_tree().connect("screen_resized", self, "_screen_resized")
+	get_tree().connect("screen_resized", self, "_save_screen_size")
 
 func _notification(what):
-	if (what == MainLoop.NOTIFICATION_WM_FOCUS_OUT) and not $title.visible:
-		_on_board_pause()
+	match what:
+		MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+			if not $title.visible:
+				_on_board_pause()
+		MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+			_save_screen_pos()
 
 func _load_screen_config():
 	var config = ConfigFile.new()
 	var err = config.load(CONFIG_FILE)
 	if (err != OK) \
-			or not config.has_section_key(CONFIG_WINDOW, CONFIG_WINDOW_SIZE):
-		config.set_value(CONFIG_WINDOW, CONFIG_WINDOW_SIZE, OS.window_size)
+			or not config.has_section_key(CONFIG_WINDOW, CONFIG_WINDOW_SIZE) \
+			or not config.has_section_key(CONFIG_WINDOW, CONFIG_WINDOW_POS):
+		config.set_value(CONFIG_WINDOW, CONFIG_WINDOW_POS, OS.window_size)
+		config.set_value(CONFIG_WINDOW, CONFIG_WINDOW_POS, OS.window_position)
 		config.save(CONFIG_FILE)
 	else:
 		var window_size = config.get_value(CONFIG_WINDOW, CONFIG_WINDOW_SIZE)
 		OS.window_size = window_size
+		var window_pos = config.get_value(CONFIG_WINDOW, CONFIG_WINDOW_POS)
+		OS.window_position = window_pos
 
-func _screen_resized():
+func _save_screen_size():
 	var config = ConfigFile.new()
 	var err = config.load(CONFIG_FILE)
 	assert(err == OK)
 	config.set_value(CONFIG_WINDOW, CONFIG_WINDOW_SIZE, OS.window_size)
+	config.save(CONFIG_FILE)
+
+func _save_screen_pos():
+	var config = ConfigFile.new()
+	var err = config.load(CONFIG_FILE)
+	assert(err == OK)
+	config.set_value(CONFIG_WINDOW, CONFIG_WINDOW_POS, OS.window_position)
 	config.save(CONFIG_FILE)
 
 func _on_title_start():
