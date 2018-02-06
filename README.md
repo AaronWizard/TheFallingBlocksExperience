@@ -1,7 +1,6 @@
 # The Falling Blocks Experience
 
-AaronWizard
-2018
+AaronWizard, 2018
 
 ![](docs/falling_blocks_experience_screenshot.png)
 
