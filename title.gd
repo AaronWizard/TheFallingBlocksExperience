@@ -1,11 +1,13 @@
 extends Control
 
 signal start
+signal options
 
-func _input(event):
-	if visible:
-		if event.is_action_pressed("cancel"):
-			get_tree().quit()
-		elif event is InputEventKey and event.pressed:
-			get_tree().set_input_as_handled()
-			emit_signal("start")
+func _on_start_pressed():
+	emit_signal("start")
+
+func _on_options_pressed():
+	emit_signal("options")
+
+func _on_quit_pressed():
+	get_tree().quit()

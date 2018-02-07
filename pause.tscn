@@ -18,17 +18,32 @@ size_flags_vertical = 1
 script = ExtResource( 1 )
 _sections_unfolded = [ "Pause" ]
 
-[node name="Label" type="Label" parent="." index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="0"]
 
-pause_mode = 2
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -39.0
-margin_top = -14.0
-margin_right = 39.0
-margin_bottom = 14.0
+margin_left = -44.5
+margin_top = -38.0
+margin_right = 44.5
+margin_bottom = 38.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer" index="0"]
+
+pause_mode = 2
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 89.0
+margin_bottom = 28.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 2
 mouse_default_cursor_shape = 0
@@ -38,9 +53,90 @@ custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0.658824, 0.658824, 1 )
 text = "Paused"
+align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Pause", "custom_colors", "custom_fonts" ]
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 32.0
+margin_right = 89.0
+margin_bottom = 76.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+use_top_left = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/CenterContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 89.0
+margin_bottom = 44.0
+rect_pivot_offset = Vector2( 0, 0 )
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 1
+
+[node name="continue" type="Button" parent="VBoxContainer/CenterContainer/VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 89.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Continue"
+flat = false
+align = 1
+
+[node name="quit" type="Button" parent="VBoxContainer/CenterContainer/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 24.0
+margin_right = 89.0
+margin_bottom = 44.0
+rect_pivot_offset = Vector2( 0, 0 )
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Quit to Title"
+flat = false
+align = 1
+
+[connection signal="pressed" from="VBoxContainer/CenterContainer/VBoxContainer/continue" to="." method="_on_continue_pressed"]
+
+[connection signal="pressed" from="VBoxContainer/CenterContainer/VBoxContainer/quit" to="." method="_on_quit_pressed"]
 
 
