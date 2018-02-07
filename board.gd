@@ -4,6 +4,8 @@ extends Node2D
 signal pause
 signal game_over
 
+enum GameState {RUNNING, COMPLETED_LINES, OVER, STOPPED}
+
 const FallingTile = preload("res://falling_tile.tscn")
 
 const START_BLOCK_TIME = 1
@@ -13,6 +15,8 @@ const LINES_PER_LEVEL = 10
 const MOVE_TIME = 0.2
 
 const BORDER_TILE_NAME = "grey"
+const COMPLETED_TILE_NAME = "white"
+
 const BLOCKS_PER_QUEUE = 7
 
 var _block_types = [
@@ -39,12 +43,13 @@ var _lines_left
 
 var _move_time
 
-enum GameState {RUNNING, OVER, STOPPED}
+var _completed_lines
 
 var _game_state
 
 func _ready():
 	_game_state = GameState.STOPPED
+	_completed_lines = []
 
 func _set_size(value):
 	board_size = value
@@ -238,7 +243,6 @@ func _end_block():
 		_check_for_completed_lines()
 
 func _check_for_completed_lines():
-	var rows = []
 	for y in range(board_size.y, 0, -1):
 		var complete = true
 		for x in range(1, board_size.x + 1):
@@ -246,20 +250,40 @@ func _check_for_completed_lines():
 				complete = false
 				break
 		if complete:
-			rows.append(y)
+			_completed_lines.append(y)
 
-	_lines_left -= rows.size()
+	_lines_left -= _completed_lines.size()
 	while _lines_left <= 0:
 		_lines_left += LINES_PER_LEVEL
 		_max_block_time -= BLOCK_ACCEL
 		_max_block_time = max(_max_block_time, MOVE_TIME)
 
-	while not rows.empty():
-		var current_y = rows.front()
+	if not _completed_lines.empty():
+		_show_completed_lines()
 
-		rows.pop_front()
-		for i in range(rows.size()):
-			rows[i] += 1
+func _show_completed_lines():
+	_game_state = GameState.COMPLETED_LINES
+
+	var completed_tile = $completed_lines.tile_set.find_tile_by_name(
+			COMPLETED_TILE_NAME)
+	assert(completed_tile != null)
+
+	for y in _completed_lines:
+		for x in range(1, board_size.x + 1):
+			$completed_lines.set_cell(x, y, completed_tile)
+	$completed_animation.play("completed")
+
+func _on_completed_animation_animation_finished( anim_name ):
+	assert(anim_name == "completed")
+
+	$completed_lines.clear()
+
+	while not _completed_lines.empty():
+		var current_y = _completed_lines.front()
+
+		_completed_lines.pop_front()
+		for i in range(_completed_lines.size()):
+			_completed_lines[i] += 1
 
 		for x in range(1, board_size.x + 1):
 			for y in range(current_y, 0, -1):
@@ -268,6 +292,8 @@ func _check_for_completed_lines():
 					$board_tiles.set_cell(x, y, tile_above)
 				else:
 					$board_tiles.set_cell(x, y, -1)
+
+	_game_state = GameState.RUNNING
 
 func _set_game_over():
 	_end_block()

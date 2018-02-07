@@ -1,7 +1,26 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://board.gd" type="Script" id=1]
 [ext_resource path="res://tilesets/tiles.tres" type="TileSet" id=2]
+
+[sub_resource type="Animation" id=1]
+
+resource_name = "completed"
+length = 0.5
+loop = false
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("completed_lines:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.12, 0.25, 0.38, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
 
 [node name="board" type="Node2D" index="0"]
 
@@ -33,6 +52,40 @@ format = 1
 tile_data = PoolIntArray( 0, 7, 0, 1, 7, 0, 2, 7, 0, 3, 7, 0, 4, 7, 0, 5, 7, 0, 6, 7, 0, 7, 7, 0, 8, 7, 0, 9, 7, 0, 10, 7, 0, 11, 7, 0, 65536, 7, 0, 65547, 7, 0, 131072, 7, 0, 131083, 7, 0, 196608, 7, 0, 196619, 7, 0, 262144, 7, 0, 262155, 7, 0, 327680, 7, 0, 327691, 7, 0, 393216, 7, 0, 393227, 7, 0, 458752, 7, 0, 458763, 7, 0, 524288, 7, 0, 524299, 7, 0, 589824, 7, 0, 589835, 7, 0, 655360, 7, 0, 655371, 7, 0, 720896, 7, 0, 720907, 7, 0, 786432, 7, 0, 786443, 7, 0, 851968, 7, 0, 851979, 7, 0, 917504, 7, 0, 917515, 7, 0, 983040, 7, 0, 983051, 7, 0, 1048576, 7, 0, 1048587, 7, 0, 1114112, 7, 0, 1114123, 7, 0, 1179648, 7, 0, 1179659, 7, 0, 1245184, 7, 0, 1245195, 7, 0, 1310720, 7, 0, 1310731, 7, 0, 1376256, 7, 0, 1376257, 7, 0, 1376258, 7, 0, 1376259, 7, 0, 1376260, 7, 0, 1376261, 7, 0, 1376262, 7, 0, 1376263, 7, 0, 1376264, 7, 0, 1376265, 7, 0, 1376266, 7, 0, 1376267, 7, 0 )
 _sections_unfolded = [ "Cell" ]
 
-[node name="falling_tiles" type="Node2D" parent="." index="1"]
+[node name="completed_lines" type="TileMap" parent="." index="1"]
+
+modulate = Color( 1, 1, 1, 0 )
+mode = 0
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 16, 16 )
+cell_quadrant_size = 16
+cell_custom_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+cell_half_offset = 2
+cell_tile_origin = 0
+cell_y_sort = false
+cell_clip_uv = false
+collision_use_kinematic = false
+collision_friction = 1.0
+collision_bounce = 0.0
+collision_layer = 1
+collision_mask = 1
+occluder_light_mask = 1
+format = 1
+tile_data = PoolIntArray(  )
+_sections_unfolded = [ "Cell", "Visibility" ]
+
+[node name="completed_animation" type="AnimationPlayer" parent="." index="2"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/completed = SubResource( 1 )
+blend_times = [  ]
+
+[node name="falling_tiles" type="Node2D" parent="." index="3"]
+
+[connection signal="animation_finished" from="completed_animation" to="." method="_on_completed_animation_animation_finished"]
 
 

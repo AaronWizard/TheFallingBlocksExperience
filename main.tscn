@@ -6,7 +6,7 @@
 [ext_resource path="res://options.tscn" type="PackedScene" id=4]
 [ext_resource path="res://title.tscn" type="PackedScene" id=5]
 
-[node name="main" type="Node" index="0"]
+[node name="main" type="Node"]
 
 script = ExtResource( 1 )
 
