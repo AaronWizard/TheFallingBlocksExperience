@@ -8,6 +8,7 @@ const CONFIG_WINDOW_POS = "position"
 
 func _ready():
 	$pause.visible = false
+
 	_load_screen_config()
 	get_tree().connect("screen_resized", self, "_save_screen_size")
 

@@ -4,7 +4,7 @@ extends Node2D
 signal pause
 signal game_over
 
-export(Vector2) var board_size = Vector2(10, 20) setget _set_size
+const FallingTile = preload("res://falling_tile.tscn")
 
 const START_BLOCK_TIME = 1
 const BLOCK_ACCEL = 0.1
@@ -25,6 +25,8 @@ var _block_types = [
 	preload("res://blocks/z.tscn")
 ]
 
+export(Vector2) var board_size = Vector2(10, 20) setget _set_size
+
 var _block_queue
 
 var _block
@@ -37,10 +39,12 @@ var _lines_left
 
 var _move_time
 
-var _running
+enum GameState {RUNNING, OVER, STOPPED}
+
+var _game_state
 
 func _ready():
-	_running = false
+	_game_state = GameState.STOPPED
 
 func _set_size(value):
 	board_size = value
@@ -65,7 +69,7 @@ func _set_size(value):
 func start_game():
 	randomize()
 
-	_running = true
+	_game_state = GameState.RUNNING
 
 	_block_queue = []
 	_generate_block_queue()
@@ -83,7 +87,7 @@ func start_game():
 	_spawn_block()
 
 func _input(event):
-	if not Engine.editor_hint and _running:
+	if not Engine.editor_hint and (_game_state == GameState.RUNNING):
 		if event.is_action_pressed("cancel"):
 			get_tree().set_input_as_handled()
 			emit_signal("pause")
@@ -109,34 +113,41 @@ func _input(event):
 					_block_time += _max_block_time
 
 func _process(delta):
-	if not Engine.editor_hint and _running:
-		var block_dropped = false
+	if not Engine.editor_hint and (_game_state != GameState.STOPPED):
+		if _game_state == GameState.RUNNING:
+			var block_dropped = false
 
-		_block_time -= delta
-		if _block_time <= 0:
+			_block_time -= delta
+			if _block_time <= 0:
+				if _block:
+					_drop_block()
+					block_dropped = true
+				else:
+					_spawn_block()
+				_block_time += _max_block_time
+
 			if _block:
-				_drop_block()
-				block_dropped = true
-			else:
-				_spawn_block()
-			_block_time += _max_block_time
+				_move_time -= delta
 
-		if _block:
-			_move_time -= delta
+				var can_move = _move_time <= 0
 
-			var can_move = _move_time <= 0
+				var move_left = Input.is_action_pressed("move_left") \
+						and can_move
+				var move_right = Input.is_action_pressed("move_right") \
+						and can_move
+				# Don't drop block manually if it's already falling fast enough
+				# naturally.
+				var move_down = Input.is_action_pressed("move_down") \
+						and can_move and (_max_block_time > MOVE_TIME) \
+						and not block_dropped
 
-			var move_left = Input.is_action_pressed("move_left") and can_move
-			var move_right = Input.is_action_pressed("move_right") and can_move
-			# Don't drop block manually if it's already falling fast enough
-			# naturally.
-			var move_down = Input.is_action_pressed("move_down") and can_move \
-					and (_max_block_time > MOVE_TIME) and not block_dropped
+				_control_block(move_left, move_right, move_down, false, false)
 
-			_control_block(move_left, move_right, move_down, false, false)
-
-			if can_move:
-				_move_time += MOVE_TIME
+				if can_move:
+					_move_time += MOVE_TIME
+		elif _game_state == GameState.OVER:
+			if $falling_tiles.get_child_count() == 0:
+				end_game()
 
 func _control_block(move_left, move_right, move_down, rotate_ccw, rotate_cw):
 	var move = Vector2()
@@ -174,7 +185,7 @@ func _spawn_block():
 	_block.block_position = block_pos
 
 	if not _is_block_space_empty(block_pos, 0):
-		end_game()
+		_set_game_over()
 
 func _generate_block_queue():
 	for b in _block_types:
@@ -223,7 +234,7 @@ func _end_block():
 	_block.queue_free()
 	_block = null
 
-	if _running:
+	if _game_state == GameState.RUNNING:
 		_check_for_completed_lines()
 
 func _check_for_completed_lines():
@@ -258,12 +269,26 @@ func _check_for_completed_lines():
 				else:
 					$board_tiles.set_cell(x, y, -1)
 
-func end_game():
-	_running = false
+func _set_game_over():
 	_end_block()
+	_game_state = GameState.OVER
+	_spawn_falling_blocks()
 
+func _spawn_falling_blocks():
+	for x in range(1, board_size.x + 1):
+		for y in range(1, board_size.y + 1):
+			if $board_tiles.get_cell(x, y) != -1:
+				var tile = FallingTile.instance()
+				tile.set_tile($board_tiles, Vector2(x, y))
+				$falling_tiles.add_child(tile)
+
+				$board_tiles.set_cell(x, y, -1)
+
+func end_game():
+	if _block != null:
+		_end_block()
 	for x in range(1, board_size.x + 1):
 		for y in range(1, board_size.y + 1):
 			$board_tiles.set_cell(x, y, -1)
-
+	_game_state = GameState.STOPPED
 	emit_signal("game_over")
