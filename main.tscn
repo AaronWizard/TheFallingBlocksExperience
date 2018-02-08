@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://board.tscn" type="PackedScene" id=2]
 [ext_resource path="res://pause.tscn" type="PackedScene" id=3]
-[ext_resource path="res://options.tscn" type="PackedScene" id=4]
-[ext_resource path="res://title.tscn" type="PackedScene" id=5]
+[ext_resource path="res://title.tscn" type="PackedScene" id=4]
 
-[node name="main" type="Node"]
+[node name="main" type="Node" index="0"]
 
 script = ExtResource( 1 )
 
@@ -16,21 +15,13 @@ script = ExtResource( 1 )
 
 visible = false
 
-[node name="options" parent="." index="2" instance=ExtResource( 4 )]
-
-visible = false
-
-[node name="title" parent="." index="3" instance=ExtResource( 5 )]
+[node name="title" parent="." index="2" instance=ExtResource( 4 )]
 
 [connection signal="game_over" from="board" to="." method="_on_board_game_over"]
 
 [connection signal="pause" from="board" to="." method="_on_board_pause"]
 
 [connection signal="end_game" from="pause" to="." method="_on_pause_end_game"]
-
-[connection signal="done" from="options" to="." method="_on_options_done"]
-
-[connection signal="options" from="title" to="." method="_on_title_options"]
 
 [connection signal="start" from="title" to="." method="_on_title_start"]
 

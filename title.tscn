@@ -3,7 +3,7 @@
 [ext_resource path="res://title.gd" type="Script" id=1]
 [ext_resource path="res://fonts/font_large.fnt" type="BitmapFont" id=2]
 [ext_resource path="res://fonts/font_small.fnt" type="BitmapFont" id=3]
-[ext_resource path="res://theme.tres" type="Theme" id=4]
+[ext_resource path="res://themes/theme.tres" type="Theme" id=4]
 
 [node name="title" type="CenterContainer" index="0"]
 
@@ -107,8 +107,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 36.0
-margin_right = 117.0
+margin_left = 13.0
+margin_right = 139.0
 margin_bottom = 119.0
 rect_pivot_offset = Vector2( 0, 0 )
 mouse_filter = 1
@@ -123,7 +123,7 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 81.0
+margin_right = 126.0
 margin_bottom = 37.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -141,14 +141,14 @@ flat = false
 align = 1
 _sections_unfolded = [ "Focus" ]
 
-[node name="options" type="Button" parent="VBoxContainer/CenterContainer/VBoxContainer" index="1"]
+[node name="instructions" type="Button" parent="VBoxContainer/CenterContainer/VBoxContainer" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 41.0
-margin_right = 81.0
+margin_right = 126.0
 margin_bottom = 78.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -161,7 +161,7 @@ toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 group = null
-text = "Options"
+text = "Instructions"
 flat = false
 align = 1
 _sections_unfolded = [ "Focus" ]
@@ -173,7 +173,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 82.0
-margin_right = 81.0
+margin_right = 126.0
 margin_bottom = 119.0
 rect_pivot_offset = Vector2( 0, 0 )
 focus_mode = 2
@@ -193,7 +193,7 @@ _sections_unfolded = [ "Focus" ]
 
 [connection signal="pressed" from="VBoxContainer/CenterContainer/VBoxContainer/start" to="." method="_on_start_pressed"]
 
-[connection signal="pressed" from="VBoxContainer/CenterContainer/VBoxContainer/options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="VBoxContainer/CenterContainer/VBoxContainer/instructions" to="." method="_on_instructions_pressed"]
 
 [connection signal="pressed" from="VBoxContainer/CenterContainer/VBoxContainer/quit" to="." method="_on_quit_pressed"]
 

@@ -8,7 +8,6 @@ const CONFIG_WINDOW_POS = "position"
 
 func _ready():
 	$pause.visible = false
-	$options.visible = false
 
 	_load_screen_config()
 	get_tree().connect("screen_resized", self, "_save_screen_size")
@@ -53,14 +52,6 @@ func _save_screen_pos():
 func _on_title_start():
 	$title.visible = false
 	$board.start_game()
-
-func _on_title_options():
-	$title.visible = false
-	$options.visible = true
-
-func _on_options_done():
-	$options.visible = false
-	$title.visible = true
 
 func _on_board_game_over():
 	$title.visible = true
