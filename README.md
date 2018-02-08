@@ -6,7 +6,7 @@ AaronWizard, 2018
 
 A game about falling blocks.
 
-## Default Keys
+## Keys
 
 | Action                   | Default Key |
 |--------------------------|-------------|
@@ -16,7 +16,7 @@ A game about falling blocks.
 | Drop                     | Space       |
 | Rotate Counter Clockwise | z           |
 | Rotate Clockwise         | x           |
-| Pause/Quit               | Escape      |
+| Pause                    | Escape      |
 
 ## Tools and resources
 
