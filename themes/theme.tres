@@ -1,8 +1,9 @@
-[gd_resource type="Theme" load_steps=5 format=2]
+[gd_resource type="Theme" load_steps=6 format=2]
 
 [ext_resource path="res://themes/button_stylebox.tres" type="StyleBox" id=1]
 [ext_resource path="res://themes/button_pressed_stylebox.tres" type="StyleBox" id=2]
-[ext_resource path="res://fonts/font_small.fnt" type="BitmapFont" id=3]
+[ext_resource path="res://themes/panel_stylebox.tres" type="StyleBox" id=3]
+[ext_resource path="res://fonts/font_small.fnt" type="BitmapFont" id=4]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -13,7 +14,7 @@ content_margin_bottom = -1.0
 
 [resource]
 
-default_font = ExtResource( 3 )
+default_font = ExtResource( 4 )
 Button/colors/font_color = Color( 1, 1, 1, 1 )
 Button/colors/font_color_disabled = Color( 0.341176, 0.341176, 1, 1 )
 Button/colors/font_color_hover = Color( 1, 1, 1, 1 )
@@ -23,5 +24,6 @@ Button/styles/focus = SubResource( 1 )
 Button/styles/hover = ExtResource( 1 )
 Button/styles/normal = ExtResource( 1 )
 Button/styles/pressed = ExtResource( 2 )
-_sections_unfolded = [ "Button", "Button/constants", "Button/fonts" ]
+PanelContainer/styles/panel = ExtResource( 3 )
+_sections_unfolded = [ "Button", "Button/constants", "Button/fonts", "PanelContainer", "PanelContainer/styles" ]
 
