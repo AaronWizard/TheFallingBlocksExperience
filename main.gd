@@ -10,6 +10,7 @@ func _ready():
 	$pause.visible = false
 
 	_load_screen_config()
+	#warning-ignore:return_value_discarded
 	get_tree().connect("screen_resized", self, "_save_screen_size")
 
 func _notification(what):

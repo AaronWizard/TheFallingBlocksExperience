@@ -194,6 +194,7 @@ func _spawn_block():
 
 func _generate_block_queue():
 	for b in _block_types:
+		#warning-ignore:unused_variable
 		for i in range(BLOCKS_PER_QUEUE):
 			_block_queue.append(b)
 

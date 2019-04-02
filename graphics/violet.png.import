@@ -3,20 +3,21 @@
 importer="texture"
 type="StreamTexture"
 path="res://.import/violet.png-7fa9dfc41a4dacfd1ed7205bcb1b8163.stex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://graphics/violet.png"
-source_md5="2e0ddaabb584571629a24ce746290cfe"
-
 dest_files=[ "res://.import/violet.png-7fa9dfc41a4dacfd1ed7205bcb1b8163.stex" ]
-dest_md5="5977e8c10b6b470b9f38b2078c57f12c"
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
+compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=false
@@ -26,6 +27,7 @@ flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
+process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true

@@ -3,20 +3,21 @@
 importer="texture"
 type="StreamTexture"
 path="res://.import/falling_blocks_experience_screenshot.png-1f9e8afd93be4d4ba3320f36b362e613.stex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://docs/falling_blocks_experience_screenshot.png"
-source_md5="b03c1ac017e0872e7cc86bb088512ffb"
-
 dest_files=[ "res://.import/falling_blocks_experience_screenshot.png-1f9e8afd93be4d4ba3320f36b362e613.stex" ]
-dest_md5="5af019fda5a936b3401bdff06809ddbb"
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
+compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
@@ -26,6 +27,7 @@ flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
+process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true
