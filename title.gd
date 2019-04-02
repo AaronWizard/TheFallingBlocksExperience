@@ -37,7 +37,7 @@ func _get_input_keys():
 		var action_list = InputMap.get_action_list(input)
 		for a in action_list:
 			if input_str:
-				input_str += ", " + OS.get_scancode_string(a.scancode)
+				input_str = input_str + ", " + OS.get_scancode_string(a.scancode)
 			else:
 				input_str = OS.get_scancode_string(a.scancode)
 
